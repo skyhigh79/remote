@@ -1,0 +1,391 @@
+/* ============================================================
+   팝업 오버레이 — 바텀시트 스타일 (모바일 기본)
+   ============================================================ */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  padding: 0;
+}
+
+.popup-overlay[hidden] {
+  display: none;
+}
+
+.popup-container {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.14);
+  width: 100%;
+  max-width: 100%;
+  max-height: 92dvh;
+  /* flex 구조: header·footer 고정, body만 스크롤 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================================
+   팝업 헤더
+   ============================================================ */
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-bottom: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  flex-shrink: 0;
+  background: var(--color-bg-card);
+}
+
+.popup-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.popup-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  transition: background var(--transition-base), color var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.popup-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.popup-close:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ============================================================
+   팝업 바디
+   ============================================================ */
+.popup-body {
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================================
+   달력 전체 래퍼
+   ============================================================ */
+.cal-wrap {
+  user-select: none;
+}
+
+/* ── 달력 헤더 (이전/다음 버튼 + 연월 표시) ── */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.cal-month {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  transition: background var(--transition-base), color var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cal-nav svg {
+  width: 20px;
+  height: 20px;
+}
+
+.cal-nav:hover:not(:disabled) {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.cal-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── 요일 헤더 ── */
+.cal-dow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: var(--spacing-xs);
+}
+
+.cal-dow span {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-xs) 0;
+}
+
+.cal-dow span:first-child { color: #c0392b; }
+.cal-dow span:last-child  { color: #0065CC; }
+
+/* ── 날짜 그리드 ── */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  transition: background var(--transition-base), color var(--transition-base);
+  position: relative;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cal-day:not(.empty):not(.disabled):hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* 빈 셀 */
+.cal-day.empty {
+  pointer-events: none;
+}
+
+/* 오늘 */
+.cal-day.today {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.cal-day.today::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
+/* 선택된 날짜 */
+.cal-day.selected {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: var(--font-weight-bold);
+}
+
+.cal-day.selected::after {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* 비활성(과거 or 범위 초과 or 주말/공휴일) */
+.cal-day.disabled {
+  color: var(--color-text-placeholder);
+  cursor: not-allowed;
+}
+
+/* 일요일 */
+.cal-grid .cal-day:nth-child(7n+1):not(.empty) {
+  color: #c0392b;
+}
+.cal-grid .cal-day:nth-child(7n+1).selected {
+  color: #fff;
+}
+.cal-grid .cal-day:nth-child(7n+1).disabled {
+  color: rgba(192, 57, 43, 0.35);
+}
+
+/* 토요일 */
+.cal-grid .cal-day:nth-child(7n):not(.empty) {
+  color: #0065CC;
+}
+.cal-grid .cal-day:nth-child(7n).selected {
+  color: #fff;
+}
+.cal-grid .cal-day:nth-child(7n).disabled {
+  color: rgba(0, 101, 204, 0.35);
+}
+
+/* ============================================================
+   슬롯 섹션
+   ============================================================ */
+.slot-section {
+  border-top: var(--border-width) solid var(--color-border);
+  padding-top: var(--spacing-lg);
+}
+
+.slot-section[hidden] {
+  display: none;
+}
+
+/* ── 로딩 ── */
+.slot-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.slot-loading[hidden] {
+  display: none;
+}
+
+.slot-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 슬롯 컨텐츠 ── */
+.slot-content[hidden] {
+  display: none;
+}
+
+.slot-date-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+}
+
+/* ── 슬롯 그리드 — 모바일 2열 ── */
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-sm);
+}
+
+.slot-btn {
+  min-height: 48px;
+  padding: var(--spacing-sm) var(--spacing-xs);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background: var(--color-bg-card);
+  text-align: center;
+  line-height: 1.4;
+  transition: border-color var(--transition-base), background var(--transition-base),
+              color var(--transition-base), box-shadow var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.slot-btn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.slot-btn.selected {
+  background: var(--color-bg-card);
+  border-color: var(--color-primary);
+  border-width: 2px;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-focus);
+}
+
+.slot-btn--full,
+.slot-btn--closed {
+  color: var(--color-text-placeholder);
+  background: var(--color-bg);
+  cursor: not-allowed;
+  font-size: var(--font-size-xs);
+}
+
+/* ── 빈 슬롯 메시지 ── */
+.slot-empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-md) 0;
+}
+
+.slot-empty[hidden] {
+  display: none;
+}
+
+.slot-fetch-error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-md) 0;
+  text-align: center;
+}
+
+/* ============================================================
+   팝업 하단 확인 버튼
+   ============================================================ */
+.popup-footer {
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--spacing-sm) var(--spacing-md) calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px));
+  flex-shrink: 0;
+  background: var(--color-bg-card);
+}
+
+.btn-confirm {
+  width: 100%;
+  height: 52px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  transition: background var(--transition-base), opacity var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.btn-confirm:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

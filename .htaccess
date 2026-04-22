@@ -1,0 +1,13 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /remote/
+
+# /remote/kids        → public/remote/kids.php
+# /remote/elementary  → public/remote/elementary.php
+# /remote/middle      → public/remote/middle.php
+# /remote/high        → public/remote/high.php
+# /remote/complete    → public/pages/complete.php
+RewriteRule ^(kids|elementary|middle|high)$ public/remote/$1.php [L]
+RewriteRule ^complete$ public/pages/complete.php [L]
+RewriteRule ^error$ public/pages/error.php [L]
+RewriteRule ^api/holidays$ public/api/holidays.php [L]

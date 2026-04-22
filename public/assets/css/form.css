@@ -1,0 +1,621 @@
+/* ============================================================
+   페이지 레이아웃 — 모바일 기본
+   ============================================================ */
+.page-wrap {
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0;
+  background: var(--color-bg-card);
+}
+
+/* ============================================================
+   폼 카드
+   ============================================================ */
+.form-card {
+  width: 100%;
+  max-width: 100%;
+  background: var(--color-bg-card);
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+  flex: 1;
+  /* 하단 safe area 여백 */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ============================================================
+   캐릭터 히어로 헤더
+   ============================================================ */
+.form-hero {
+  background: linear-gradient(135deg, var(--hero-grad-start) 0%, var(--hero-grad-mid) 55%, var(--hero-grad-end) 100%);
+  padding: var(--spacing-lg) var(--spacing-md) 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  min-height: 148px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 배경 장식 원 */
+.form-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.form-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 20px;
+  left: -20px;
+  width: 90px;
+  height: 90px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.hero-text {
+  padding-bottom: var(--spacing-xl);
+  z-index: 1;
+  flex: 1;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 3px var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  margin-bottom: var(--spacing-sm);
+  backdrop-filter: blur(4px);
+}
+
+.hero-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #fff;
+  margin-bottom: var(--spacing-xs);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.hero-subtitle {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.6;
+}
+
+.hero-character {
+  width: 110px;
+  flex-shrink: 0;
+  margin-bottom: -4px;
+  z-index: 1;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.12));
+}
+
+/* ============================================================
+   폼 본문
+   ============================================================ */
+.form-body {
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+/* ============================================================
+   에러 배너
+   ============================================================ */
+.form-error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  background: var(--color-error-bg);
+  border: var(--border-width) solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-error-banner[hidden] {
+  display: none;
+}
+
+.icon-error {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ============================================================
+   입력 필드 그룹
+   ============================================================ */
+.field-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.field-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: 2px;
+}
+
+/* 텍스트 입력 */
+.field-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--spacing-md);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background: var(--color-bg-card);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.field-input::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.field-input:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+/* 에러 상태 */
+.field-group.has-error .field-input,
+.field-group.has-error .field-textarea {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+.field-error {
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+}
+
+.field-error[hidden] {
+  display: none;
+}
+
+/* ============================================================
+   텍스트에어리어
+   ============================================================ */
+.textarea-wrap {
+  position: relative;
+}
+
+.field-textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background: var(--color-bg-card);
+  line-height: var(--line-height-base);
+  min-height: 140px;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  padding-bottom: 32px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.field-textarea::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.field-textarea:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.char-counter {
+  position: absolute;
+  bottom: var(--spacing-sm);
+  right: var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.char-counter.is-warning { color: #e07b00; }
+.char-counter.is-danger  { color: #d32f2f; font-weight: 600; }
+
+/* ============================================================
+   예약일시 버튼
+   ============================================================ */
+.reserv-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--spacing-md);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  color: var(--color-text-placeholder);
+  font-size: var(--font-size-base);
+  text-align: left;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base),
+              color var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.reserv-btn:hover {
+  border-color: var(--color-primary);
+}
+
+.reserv-btn:focus-visible {
+  border-color: var(--color-border-focus);
+  box-shadow: var(--shadow-focus);
+  outline: none;
+}
+
+.reserv-btn.is-selected {
+  color: var(--color-text);
+  border-color: var(--color-border-focus);
+}
+
+.field-group.has-error .reserv-btn {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+.icon-calendar {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+/* ============================================================
+   제출 버튼
+   ============================================================ */
+.form-actions {
+  margin-top: var(--spacing-xl);
+}
+
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  height: 52px;
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  transition: background var(--transition-base), opacity var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-submit:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-submit:active {
+  opacity: 0.85;
+}
+
+.btn-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* 로딩 스피너 */
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.btn-spinner[hidden] {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   스텝 인디케이터
+   ============================================================ */
+.step-nav {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+}
+
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+
+.step-label {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: color var(--transition-base);
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--color-border);
+  margin-top: 14px;
+  transition: background var(--transition-base);
+}
+
+/* 활성 스텝 */
+.step-item.active .step-circle {
+  background: var(--color-primary);
+  color: #fff;
+}
+.step-item.active .step-label {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* 완료된 스텝 */
+.step-item.done .step-circle {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0;
+}
+.step-item.done .step-circle::after {
+  content: '✓';
+  font-size: 13px;
+}
+.step-item.done .step-label {
+  color: var(--color-primary);
+}
+.step-item.done + .step-line {
+  background: var(--color-primary);
+}
+
+/* ============================================================
+   스텝 패널 표시/숨김
+   ============================================================ */
+.step-panel {
+  display: none;
+}
+.step-panel.is-active {
+  display: block;
+}
+
+/* ============================================================
+   스텝 이동 버튼
+   ============================================================ */
+.step-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xl);
+}
+
+.btn-step-prev {
+  flex: 0 0 28%;
+  height: 52px;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-card);
+  transition: border-color var(--transition-base), color var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-step-prev:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-step-next {
+  flex: 1;
+  height: 52px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  transition: background var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-step-next:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-step-submit {
+  flex: 1;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  transition: background var(--transition-base), opacity var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-step-submit:hover    { background: var(--color-primary-hover); }
+.btn-step-submit:active   { opacity: 0.85; }
+.btn-step-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* ============================================================
+   접수 확인 모달
+   ============================================================ */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--spacing-md);
+}
+
+.confirm-overlay[hidden] {
+  display: none;
+}
+
+.confirm-modal {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 360px;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.22);
+}
+
+.confirm-heading {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.confirm-info {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.confirm-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.confirm-row:last-child {
+  border-bottom: none;
+}
+
+.confirm-row dt {
+  flex-shrink: 0;
+  width: 52px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.confirm-row dd {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  word-break: break-all;
+  white-space: pre-line;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.confirm-notice {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-main, #333);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.btn-cancel-confirm {
+  flex: 0 0 35%;
+  height: 48px;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-card);
+  transition: border-color var(--transition-base), color var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-cancel-confirm:hover {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.btn-submit-confirm {
+  flex: 1;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  transition: background var(--transition-base), opacity var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-submit-confirm:hover     { background: var(--color-primary-hover); }
+.btn-submit-confirm:disabled  { opacity: 0.55; cursor: not-allowed; }
+

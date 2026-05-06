@@ -40,29 +40,6 @@
   overflow: hidden;
 }
 
-/* 배경 장식 원 */
-.form-hero::before {
-  content: '';
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 160px;
-  height: 160px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-}
-
-.form-hero::after {
-  content: '';
-  position: absolute;
-  bottom: 20px;
-  left: -20px;
-  width: 90px;
-  height: 90px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
-}
-
 .hero-text {
   padding-bottom: var(--spacing-xl);
   z-index: 1;
@@ -180,6 +157,15 @@
 .field-input:focus {
   border-color: var(--color-border-focus);
   box-shadow: var(--shadow-focus);
+}
+
+.field-guide {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-main, #333);
+  margin-top: 0.25rem;
+  margin-left: 0.5rem;
+  line-height: 1.5;
 }
 
 /* 에러 상태 */
@@ -365,12 +351,12 @@
 }
 
 .step-circle {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: var(--color-border);
   color: var(--color-text-secondary);
-  font-size: var(--font-size-xs);
+  font-size: 11px;
   font-weight: var(--font-weight-bold);
   display: flex;
   align-items: center;
@@ -379,9 +365,11 @@
 }
 
 .step-label {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--color-text-secondary);
   white-space: nowrap;
+  text-align: center;
+  visibility: hidden;
   transition: color var(--transition-base);
 }
 
@@ -389,7 +377,7 @@
   flex: 1;
   height: 2px;
   background: var(--color-border);
-  margin-top: 14px;
+  margin-top: 13px;
   transition: background var(--transition-base);
 }
 
@@ -399,6 +387,7 @@
   color: #fff;
 }
 .step-item.active .step-label {
+  visibility: visible;
   color: var(--color-primary);
   font-weight: var(--font-weight-bold);
 }
@@ -496,46 +485,21 @@
 .btn-step-submit:disabled { opacity: 0.55; cursor: not-allowed; }
 
 /* ============================================================
-   접수 확인 모달
+   Step 5: 접수 내용 확인 (인라인)
    ============================================================ */
-.confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: var(--spacing-md);
-}
-
-.confirm-overlay[hidden] {
-  display: none;
-}
-
-.confirm-modal {
-  background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 360px;
-  padding: var(--spacing-xl) var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.22);
-}
-
 .confirm-heading {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
   text-align: center;
+  margin-bottom: var(--spacing-lg);
 }
 
 .confirm-info {
   background: var(--color-bg);
   border-radius: var(--radius-md);
   overflow: hidden;
+  margin-bottom: var(--spacing-md);
 }
 
 .confirm-row {
@@ -552,7 +516,7 @@
 
 .confirm-row dt {
   flex-shrink: 0;
-  width: 52px;
+  width: 56px;
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
 }
@@ -572,51 +536,27 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-text-main, #333);
-  margin-top: 0.25rem;
+  margin-bottom: var(--spacing-sm);
   margin-left: 0.5rem;
   line-height: 1.5;
 }
 
-.confirm-actions {
-  display: flex;
-  gap: var(--spacing-sm);
+/* ============================================================
+   인라인 달력 패널 여백 및 모바일 최적화
+   ============================================================ */
+#stepPanel3 .cal-wrap {
+  margin-top: var(--spacing-sm);
 }
 
-.btn-cancel-confirm {
-  flex: 0 0 35%;
-  height: 48px;
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  color: var(--color-text-secondary);
-  background: var(--color-bg-card);
-  transition: border-color var(--transition-base), color var(--transition-base);
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+#stepPanel3 .cal-header {
+  margin-bottom: var(--spacing-sm);
 }
 
-.btn-cancel-confirm:hover {
-  border-color: var(--color-error);
-  color: var(--color-error);
+#stepPanel3 .cal-day {
+  min-height: 34px;
 }
 
-.btn-submit-confirm {
-  flex: 1;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  transition: background var(--transition-base), opacity var(--transition-base);
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+#stepPanel3 .step-actions {
+  margin-top: var(--spacing-md);
 }
-
-.btn-submit-confirm:hover     { background: var(--color-primary-hover); }
-.btn-submit-confirm:disabled  { opacity: 0.55; cursor: not-allowed; }
 

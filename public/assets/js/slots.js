@@ -28,7 +28,7 @@ async function loadSlots(dateStr, serviceKey, elements, onSelect) {
     const m   = dateStr.slice(4, 6);
     const d   = dateStr.slice(6, 8);
     const dow = ['일', '월', '화', '수', '목', '금', '토'][new Date(`${y}-${m}-${d}`).getDay()];
-    dateLabel.textContent = `${y}년 ${m}월 ${d}일 (${dow}) 선택 가능한 시간`;
+    dateLabel.textContent = `${y}년 ${m}월 ${d}일 (${dow})`;
 
     gridEl.innerHTML = '';
 

@@ -42,17 +42,27 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
       <div class="step-nav" id="stepNav" aria-hidden="true">
         <div class="step-item active" data-step="1">
           <div class="step-circle">1</div>
-          <span class="step-label">연락처</span>
+          <span class="step-label">연락처 입력</span>
         </div>
         <div class="step-line"></div>
         <div class="step-item" data-step="2">
           <div class="step-circle">2</div>
-          <span class="step-label">증상</span>
+          <span class="step-label">증상 입력</span>
         </div>
         <div class="step-line"></div>
         <div class="step-item" data-step="3">
           <div class="step-circle">3</div>
-          <span class="step-label">예약일시</span>
+          <span class="step-label">날짜 선택</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item" data-step="4">
+          <div class="step-circle">4</div>
+          <span class="step-label">시간대 선택</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item" data-step="5">
+          <div class="step-circle">5</div>
+          <span class="step-label">접수내용 확인</span>
         </div>
       </div>
 
@@ -91,6 +101,7 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
               maxlength="20"
               autocomplete="tel"
             >
+            <p class="field-guide">*실제로 연락 받으실 번호를 입력해주세요 <br> *입력해주신 번호로 원격 상담사가 연락드립니다</p>
             <p class="field-error" id="phoneError" hidden></p>
           </div>
           <div class="step-actions">
@@ -126,31 +137,96 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
           </div>
         </div>
 
-        <!-- Step 3: 예약일시 -->
+        <!-- Step 3: 예약날짜 선택 -->
         <div class="step-panel" id="stepPanel3" hidden>
-          <div class="field-group" id="fieldReserv">
+          <div class="field-group" id="fieldDate">
             <label class="field-label">
-              예약일시
+              예약날짜 선택
               <span class="required" aria-label="필수">*</span>
             </label>
-            <button
-              type="button"
-              class="reserv-btn"
-              id="openPopupBtn"
-              aria-haspopup="dialog"
-            >
-              <svg class="icon-calendar" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <rect x="2" y="3.5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.4"/>
-                <path d="M6 2v3M14 2v3M2 8h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-              </svg>
-              <span id="reservLabel">날짜 및 시간을 선택해주세요</span>
-            </button>
-            <p class="field-error" id="reservError" hidden></p>
+            <p class="field-error" id="dateError" hidden></p>
           </div>
+
+          <!-- 인라인 달력 -->
+          <div class="cal-wrap">
+            <div class="cal-header">
+              <button type="button" class="cal-nav" id="calPrev" aria-label="이전 달">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <span class="cal-month" id="calMonth"></span>
+              <button type="button" class="cal-nav" id="calNext" aria-label="다음 달">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="cal-dow" aria-hidden="true">
+              <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+            </div>
+            <div class="cal-grid" id="calGrid" role="grid" aria-label="날짜 선택"></div>
+          </div>
+
           <div class="step-actions">
             <button type="button" class="btn-step-prev" data-prev="2">이전</button>
-            <button type="submit" class="btn-step-submit" id="submitBtn">
-              <span class="btn-text">접수하기</span>
+            <button type="button" class="btn-step-next" data-next="4" id="dateNextBtn" disabled>다음</button>
+          </div>
+        </div>
+
+        <!-- Step 4: 예약시간 선택 -->
+        <div class="step-panel" id="stepPanel4" hidden>
+          <div class="field-group" id="fieldSlot">
+            <label class="field-label">
+              예약시간 선택
+              <span class="required" aria-label="필수">*</span>
+            </label>
+            <p class="slot-date-label" id="slotDateLabel"></p>
+            <p class="field-error" id="slotError" hidden></p>
+          </div>
+
+          <!-- 슬롯 로딩 / 컨텐츠 -->
+          <div class="slot-loading" id="slotLoading" hidden>
+            <span class="slot-spinner" aria-hidden="true"></span>
+            <span>가능한 시간을 불러오는 중...</span>
+          </div>
+          <div class="slot-content" id="slotContent" hidden>
+            <div class="slot-grid" id="slotGrid"></div>
+            <p class="slot-empty" id="slotEmpty" hidden>선택한 날짜에 가능한 시간이 없습니다.</p>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-step-prev" data-prev="3">이전</button>
+            <button type="button" class="btn-step-next" data-next="5" id="slotNextBtn" disabled>다음</button>
+          </div>
+        </div>
+
+        <!-- Step 5: 접수 내용 확인 -->
+        <div class="step-panel" id="stepPanel5" hidden>
+          <p class="confirm-heading">입력하신 정보를 확인해주세요</p>
+          <dl class="confirm-info">
+            <div class="confirm-row">
+              <dt>연락처</dt>
+              <dd id="confirmPhone"></dd>
+            </div>
+            <div class="confirm-row">
+              <dt>증상</dt>
+              <dd id="confirmSymptom"></dd>
+            </div>
+            <div class="confirm-row">
+              <dt>예약날짜</dt>
+              <dd id="confirmDate"></dd>
+            </div>
+            <div class="confirm-row">
+              <dt>예약시간</dt>
+              <dd id="confirmTime"></dd>
+            </div>
+          </dl>
+          <p class="confirm-notice">*예약하신 시간대에 순차적으로 연락드릴 예정입니다</p>
+          <div class="step-actions">
+            <button type="button" class="btn-step-prev" data-prev="4">이전</button>
+            <button type="button" class="btn-step-submit" id="submitBtn">
+              <span class="btn-text">접수</span>
               <span class="btn-spinner" hidden aria-hidden="true"></span>
             </button>
           </div>
@@ -162,95 +238,9 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
     </div>
   </main>
 
-  <!-- 예약일시 선택 팝업 -->
-  <div class="popup-overlay" id="popupOverlay" hidden role="dialog" aria-modal="true" aria-label="예약일시 선택">
-    <div class="popup-container">
-      <div class="popup-header">
-        <h2 class="popup-title">예약일시 선택</h2>
-        <button type="button" class="popup-close" id="closePopupBtn" aria-label="닫기">
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-      <div class="popup-body">
-
-        <!-- 달력 -->
-        <div class="cal-wrap">
-          <div class="cal-header">
-            <button type="button" class="cal-nav" id="calPrev" aria-label="이전 달">
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <span class="cal-month" id="calMonth"></span>
-            <button type="button" class="cal-nav" id="calNext" aria-label="다음 달">
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
-          <div class="cal-dow" aria-hidden="true">
-            <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
-          </div>
-          <div class="cal-grid" id="calGrid" role="grid" aria-label="날짜 선택"></div>
-        </div>
-
-        <!-- 시간 슬롯 (날짜 선택 후 표시) -->
-        <div class="slot-section" id="slotSection" hidden>
-          <div class="slot-loading" id="slotLoading" hidden>
-            <span class="slot-spinner" aria-hidden="true"></span>
-            <span>가능한 시간을 불러오는 중...</span>
-          </div>
-          <div class="slot-content" id="slotContent" hidden>
-            <p class="slot-date-label" id="slotDateLabel"></p>
-            <div class="slot-grid" id="slotGrid"></div>
-            <p class="slot-empty" id="slotEmpty" hidden>선택한 날짜에 가능한 시간이 없습니다.</p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 팝업 하단 확인 버튼 (스크롤 영역 밖, 항상 화면에 고정) -->
-      <div class="popup-footer">
-        <button type="button" class="btn-confirm" id="confirmBtn" disabled>선택 완료</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- 접수 확인 모달 -->
-  <div class="confirm-overlay" id="confirmOverlay" hidden role="dialog" aria-modal="true" aria-label="접수 내용 확인">
-    <div class="confirm-modal">
-      <p class="confirm-heading">입력하신 정보를 확인해주세요</p>
-      <dl class="confirm-info">
-        <div class="confirm-row">
-          <dt>연락처</dt>
-          <dd id="confirmPhone"></dd>
-        </div>
-        <div class="confirm-row">
-          <dt>증상</dt>
-          <dd id="confirmSymptom"></dd>
-        </div>
-        <div class="confirm-row">
-          <dt>예약일시</dt>
-          <dd id="confirmReserv"></dd>
-        </div>
-      </dl>
-      <p class="confirm-notice">예약하신 시간대에 순차적으로 연락드릴 예정입니다</p>
-      <div class="confirm-actions">
-        <button type="button" class="btn-cancel-confirm" id="cancelConfirmBtn">취소</button>
-        <button type="button" class="btn-submit-confirm" id="confirmSubmitBtn">
-          <span class="btn-text">접수</span>
-          <span class="btn-spinner" hidden aria-hidden="true"></span>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <script src="/remote/public/assets/js/form.js"></script>
   <script src="/remote/public/assets/js/calendar.js"></script>
   <script src="/remote/public/assets/js/slots.js"></script>
-  <script src="/remote/public/assets/js/popup.js"></script>
+  <script src="/remote/public/assets/js/reservation.js"></script>
 </body>
 </html>

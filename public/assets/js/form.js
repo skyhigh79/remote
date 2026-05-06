@@ -1,14 +1,12 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const form              = document.getElementById('asForm');
-  const symptomEl         = document.getElementById('symptom');
-  const charCount         = document.getElementById('charCount');
-  const errorBanner       = document.getElementById('errorBanner');
-  const errorMessage      = document.getElementById('errorMessage');
-  const confirmOverlay    = document.getElementById('confirmOverlay');
-  const cancelConfirmBtn  = document.getElementById('cancelConfirmBtn');
-  const confirmSubmitBtn  = document.getElementById('confirmSubmitBtn');
+  const form          = document.getElementById('asForm');
+  const symptomEl     = document.getElementById('symptom');
+  const charCount     = document.getElementById('charCount');
+  const errorBanner   = document.getElementById('errorBanner');
+  const errorMessage  = document.getElementById('errorMessage');
+  const submitBtn     = document.getElementById('submitBtn');
 
   // ── 연락처 자동 하이픈 ──────────────────────────────────
   const phoneEl = document.getElementById('phone');
@@ -41,6 +39,24 @@ document.addEventListener('DOMContentLoaded', () => {
     symptomEl.addEventListener('input', updateCounter);
   }
 
+  // ── 모바일 키보드 대응: 증상 입력 포커스 시 다음 버튼 노출 ──
+  if (symptomEl) {
+    const scrollToNextBtn = () => {
+      const nextBtn = document.querySelector('#stepPanel2 .step-actions');
+      nextBtn?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        if (document.activeElement === symptomEl) scrollToNextBtn();
+      });
+    } else {
+      symptomEl.addEventListener('focus', () => {
+        setTimeout(scrollToNextBtn, 400);
+      });
+    }
+  }
+
   if (!form) return;
 
   // ── 스텝 이동 ────────────────────────────────────────────
@@ -49,9 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('click', e => {
     const nextBtn = e.target.closest('.btn-step-next');
     const prevBtn = e.target.closest('.btn-step-prev');
+
     if (nextBtn) {
       const nextStep = parseInt(nextBtn.dataset.next, 10);
-      if (validateStep(nextStep - 1)) showStep(nextStep);
+      if (validateStep(nextStep - 1)) {
+        if (nextStep === 5) populateConfirm();
+        showStep(nextStep);
+      }
     } else if (prevBtn) {
       showStep(parseInt(prevBtn.dataset.prev, 10));
     }
@@ -59,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function validateStep(n) {
     if (n === 1) {
-      const phoneVal = document.getElementById('phone')?.value.trim() ?? '';
+      const phoneVal = phoneEl?.value.trim() ?? '';
       if (!phoneVal) {
         setFieldError('fieldPhone', 'phoneError', '연락처를 입력해주세요.');
         return false;
@@ -74,6 +94,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
       }
       clearFieldError('fieldSymptom', 'symptomError');
+      return true;
+    }
+    if (n === 3) {
+      const dateVal = document.getElementById('reservDate')?.value ?? '';
+      if (!dateVal) {
+        setFieldError('fieldDate', 'dateError', '날짜를 선택해주세요.');
+        return false;
+      }
+      clearFieldError('fieldDate', 'dateError');
+      return true;
+    }
+    if (n === 4) {
+      const stimeVal = document.getElementById('reservStime')?.value ?? '';
+      if (!stimeVal) {
+        setFieldError('fieldSlot', 'slotError', '시간을 선택해주세요.');
+        return false;
+      }
+      clearFieldError('fieldSlot', 'slotError');
       return true;
     }
     return true;
@@ -92,47 +130,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── 폼 제출 → 확인 모달 열기 ─────────────────────────────
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    // Step 3: 예약일시 확인
-    const reservDateVal = document.getElementById('reservDate')?.value ?? '';
-    if (!reservDateVal) {
-      setFieldError('fieldReserv', 'reservError', '예약일시를 선택해주세요.');
-      return;
-    }
-    clearFieldError('fieldReserv', 'reservError');
-    openConfirmModal();
-  });
-
-  // ── 확인 모달 ────────────────────────────────────────────
-  function openConfirmModal() {
+  // ── Step 5 확인 내용 채우기 ─────────────────────────────
+  function populateConfirm() {
     document.getElementById('confirmPhone').textContent =
-      document.getElementById('phone')?.value.trim() ?? '';
+      phoneEl?.value.trim() ?? '';
     document.getElementById('confirmSymptom').textContent =
       symptomEl?.value.trim() ?? '';
-    document.getElementById('confirmReserv').textContent =
-      document.getElementById('reservLabel')?.textContent ?? '';
 
-    confirmOverlay.hidden = false;
-    document.body.style.overflow = 'hidden';
+    const dateStr = document.getElementById('reservDate')?.value ?? '';
+    const stime   = document.getElementById('reservStime')?.value ?? '';
+    const etime   = document.getElementById('reservEtime')?.value ?? '';
+
+    if (dateStr) {
+      const y   = dateStr.slice(0, 4);
+      const m   = dateStr.slice(4, 6);
+      const d   = dateStr.slice(6, 8);
+      const dow = ['일', '월', '화', '수', '목', '금', '토'][new Date(`${y}-${m}-${d}`).getDay()];
+      document.getElementById('confirmDate').textContent = `${y}.${m}.${d}(${dow})`;
+    }
+
+    if (stime && etime) {
+      document.getElementById('confirmTime').textContent =
+        `${fmt(stime)} ~ ${fmt(etime)}`;
+    }
   }
 
-  function closeConfirmModal() {
-    confirmOverlay.hidden = true;
-    document.body.style.overflow = '';
+  function fmt(hhmm) {
+    return `${hhmm.slice(0, 2)}:${hhmm.slice(2, 4)}`;
   }
-
-  cancelConfirmBtn?.addEventListener('click', closeConfirmModal);
-
-  // 딤 배경 클릭 시 닫기
-  confirmOverlay?.addEventListener('click', e => {
-    if (e.target === confirmOverlay) closeConfirmModal();
-  });
 
   // ── 최종 접수 (AJAX) ─────────────────────────────────────
-  confirmSubmitBtn?.addEventListener('click', async () => {
-    setModalLoading(true);
+  submitBtn?.addEventListener('click', async () => {
+    setSubmitLoading(true);
     hideError();
 
     try {
@@ -146,57 +175,18 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = data.redirect ?? '/remote/complete';
         return;
       }
-      closeConfirmModal();
       showError(data.message || '접수에 실패했습니다. 다시 시도해주세요.');
     } catch {
-      closeConfirmModal();
       showError('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
-      setModalLoading(false);
+      setSubmitLoading(false);
     }
   });
 
-  // ── 유효성 검사 (서버 제출 전 최종 안전망) ───────────────
-  function validateForm() {
-    let valid = true;
-    let firstErrorStep = null;
-
-    const phoneVal = document.getElementById('phone')?.value.trim() ?? '';
-    if (!phoneVal) {
-      setFieldError('fieldPhone', 'phoneError', '연락처를 입력해주세요.');
-      if (!firstErrorStep) firstErrorStep = 1;
-      valid = false;
-    } else {
-      clearFieldError('fieldPhone', 'phoneError');
-    }
-
-    const symptomVal = symptomEl?.value.trim() ?? '';
-    if (!symptomVal) {
-      setFieldError('fieldSymptom', 'symptomError', '증상을 입력해주세요.');
-      if (!firstErrorStep) firstErrorStep = 2;
-      valid = false;
-    } else {
-      clearFieldError('fieldSymptom', 'symptomError');
-    }
-
-    const reservDateVal = document.getElementById('reservDate')?.value ?? '';
-    if (!reservDateVal) {
-      setFieldError('fieldReserv', 'reservError', '예약일시를 선택해주세요.');
-      if (!firstErrorStep) firstErrorStep = 3;
-      valid = false;
-    } else {
-      clearFieldError('fieldReserv', 'reservError');
-    }
-
-    if (!valid && firstErrorStep) {
-      showStep(firstErrorStep);
-      setTimeout(() => {
-        form.querySelector('.step-panel.is-active .field-group.has-error')
-          ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 50);
-    }
-
-    return valid;
+  function setSubmitLoading(on) {
+    submitBtn.disabled = on;
+    submitBtn.querySelector('.btn-text').hidden    = on;
+    submitBtn.querySelector('.btn-spinner').hidden = !on;
   }
 
   function setFieldError(fieldId, errorId, msg) {
@@ -211,14 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (errorEl) errorEl.hidden = true;
   }
 
-  // ── 모달 로딩 상태 ───────────────────────────────────────
-  function setModalLoading(on) {
-    confirmSubmitBtn.disabled = on;
-    confirmSubmitBtn.querySelector('.btn-text').hidden   = on;
-    confirmSubmitBtn.querySelector('.btn-spinner').hidden = !on;
-  }
-
-  // ── 에러 배너 ────────────────────────────────────────────
   function showError(msg) {
     errorMessage.textContent = msg;
     errorBanner.hidden = false;
@@ -228,5 +210,4 @@ document.addEventListener('DOMContentLoaded', () => {
   function hideError() {
     errorBanner.hidden = true;
   }
-
 });

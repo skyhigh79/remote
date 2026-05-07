@@ -542,21 +542,77 @@
 }
 
 /* ============================================================
-   인라인 달력 패널 여백 및 모바일 최적화
+   Step 3: 날짜 카드 그리드
    ============================================================ */
-#stepPanel3 .cal-wrap {
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-sm);
   margin-top: var(--spacing-sm);
 }
 
-#stepPanel3 .cal-header {
-  margin-bottom: var(--spacing-sm);
+.date-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 64px;
+  padding: var(--spacing-sm) var(--spacing-xs);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: var(--color-bg-card);
+  text-align: center;
+  line-height: 1.4;
+  box-shadow: none;
+  outline: none;
+  transition: border-color var(--transition-base), background var(--transition-base),
+              color var(--transition-base), box-shadow var(--transition-base),
+              border-width var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-#stepPanel3 .cal-day {
-  min-height: 34px;
+.date-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
-#stepPanel3 .step-actions {
-  margin-top: var(--spacing-md);
+.date-btn.selected {
+  border-color: var(--color-primary);
+  border-width: 2px;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-focus);
+}
+
+.date-btn__date {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+}
+
+.date-btn__today {
+  font-style: normal;
+  font-size: 10px;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.6;
+}
+
+.date-btn.selected .date-btn__today {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.date-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-md) 0;
 }
 

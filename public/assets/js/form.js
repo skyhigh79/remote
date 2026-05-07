@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (n === 3) {
       const dateVal = document.getElementById('reservDate')?.value ?? '';
       if (!dateVal) {
-        setFieldError('fieldDate', 'dateError', '날짜를 선택해주세요.');
+        setFieldError('fieldDate', 'dateError', '예약날짜를 선택해주세요.');
         return false;
       }
       clearFieldError('fieldDate', 'dateError');
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (n === 4) {
       const stimeVal = document.getElementById('reservStime')?.value ?? '';
       if (!stimeVal) {
-        setFieldError('fieldSlot', 'slotError', '시간을 선택해주세요.');
+        setFieldError('fieldSlot', 'slotError', '예약시간을 선택해주세요.');
         return false;
       }
       clearFieldError('fieldSlot', 'slotError');

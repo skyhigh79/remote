@@ -144,33 +144,20 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
               예약날짜 선택
               <span class="required" aria-label="필수">*</span>
             </label>
-            <p class="field-error" id="dateError" hidden></p>
           </div>
 
-          <!-- 인라인 달력 -->
-          <div class="cal-wrap">
-            <div class="cal-header">
-              <button type="button" class="cal-nav" id="calPrev" aria-label="이전 달">
-                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              <span class="cal-month" id="calMonth"></span>
-              <button type="button" class="cal-nav" id="calNext" aria-label="다음 달">
-                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-            <div class="cal-dow" aria-hidden="true">
-              <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
-            </div>
-            <div class="cal-grid" id="calGrid" role="grid" aria-label="날짜 선택"></div>
+          <!-- 날짜 카드 로딩 -->
+          <div class="slot-loading" id="dateLoading">
+            <span class="slot-spinner" aria-hidden="true"></span>
+            <span>가능한 날짜를 불러오는 중...</span>
           </div>
+          <!-- 날짜 카드 그리드 -->
+          <div class="date-grid" id="dateGrid"></div>
+          <p class="field-error" id="dateError" hidden></p>
 
           <div class="step-actions">
             <button type="button" class="btn-step-prev" data-prev="2">이전</button>
-            <button type="button" class="btn-step-next" data-next="4" id="dateNextBtn" disabled>다음</button>
+            <button type="button" class="btn-step-next" data-next="4" id="dateNextBtn">다음</button>
           </div>
         </div>
 
@@ -182,7 +169,6 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
               <span class="required" aria-label="필수">*</span>
             </label>
             <p class="slot-date-label" id="slotDateLabel"></p>
-            <p class="field-error" id="slotError" hidden></p>
           </div>
 
           <!-- 슬롯 로딩 / 컨텐츠 -->
@@ -194,10 +180,11 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
             <div class="slot-grid" id="slotGrid"></div>
             <p class="slot-empty" id="slotEmpty" hidden>선택한 날짜에 가능한 시간이 없습니다.</p>
           </div>
+          <p class="field-error" id="slotError" hidden></p>
 
           <div class="step-actions">
             <button type="button" class="btn-step-prev" data-prev="3">이전</button>
-            <button type="button" class="btn-step-next" data-next="5" id="slotNextBtn" disabled>다음</button>
+            <button type="button" class="btn-step-next" data-next="5" id="slotNextBtn">다음</button>
           </div>
         </div>
 
@@ -239,7 +226,7 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
   </main>
 
   <script src="/remote/public/assets/js/form.js"></script>
-  <script src="/remote/public/assets/js/calendar.js"></script>
+  <script src="/remote/public/assets/js/datepicker.js"></script>
   <script src="/remote/public/assets/js/slots.js"></script>
   <script src="/remote/public/assets/js/reservation.js"></script>
 </body>

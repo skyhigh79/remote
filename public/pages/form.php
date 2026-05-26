@@ -47,7 +47,7 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
         <div class="step-line"></div>
         <div class="step-item" data-step="2">
           <div class="step-circle">2</div>
-          <span class="step-label">증상 입력</span>
+          <span class="step-label">문의내용 입력</span>
         </div>
         <div class="step-line"></div>
         <div class="step-item" data-step="3">
@@ -109,11 +109,11 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
           </div>
         </div>
 
-        <!-- Step 2: 증상 -->
+        <!-- Step 2: 문의 내용 -->
         <div class="step-panel" id="stepPanel2" hidden>
           <div class="field-group" id="fieldSymptom">
             <label class="field-label" for="symptom">
-              증상
+              문의내용
               <span class="required" aria-label="필수">*</span>
             </label>
             <div class="textarea-wrap">
@@ -121,7 +121,7 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
                 id="symptom"
                 name="symptom"
                 class="field-textarea"
-                placeholder="불편하신 증상을 자세히 입력해주세요."
+                placeholder="불편하신 부분을 자세히 입력해주세요.&#10;&#10;예) X월 Y일 국어 학습이 안 열려요 / 화면이 이동될 때 오래 걸려요 / 초등 로그인이 안돼요"
                 maxlength="<?= SYMPTOM_MAX_LENGTH ?>"
                 rows="5"
               ></textarea>
@@ -178,7 +178,7 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
           </div>
           <div class="slot-content" id="slotContent" hidden>
             <div class="slot-grid" id="slotGrid"></div>
-            <p class="slot-empty" id="slotEmpty" hidden>선택한 날짜에 가능한 시간이 없습니다.</p>
+            <p class="slot-empty" id="slotEmpty" hidden>선택한 날짜에 가능한 시간이 없습니다.<br>다른 날짜를 선택해주세요.</p>
           </div>
           <p class="field-error" id="slotError" hidden></p>
 
@@ -195,25 +195,41 @@ $character_img  = CHARACTER_IMG_MAP[SERVICE_KEY] ?? ASSET_CHARACTER_IMG;
             <div class="confirm-row">
               <dt>연락처</dt>
               <dd id="confirmPhone"></dd>
+              <button type="button" class="btn-confirm-edit" data-goto="1" aria-label="연락처 수정">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H3v-2L11.5 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                <span class="btn-confirm-edit__text">수정</span>
+              </button>
             </div>
             <div class="confirm-row">
-              <dt>증상</dt>
+              <dt>문의내용</dt>
               <dd id="confirmSymptom"></dd>
+              <button type="button" class="btn-confirm-edit" data-goto="2" aria-label="문의내용 수정">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H3v-2L11.5 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                <span class="btn-confirm-edit__text">수정</span>
+              </button>
             </div>
             <div class="confirm-row">
               <dt>예약날짜</dt>
               <dd id="confirmDate"></dd>
+              <button type="button" class="btn-confirm-edit" data-goto="3" aria-label="예약날짜 수정">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H3v-2L11.5 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                <span class="btn-confirm-edit__text">수정</span>
+              </button>
             </div>
             <div class="confirm-row">
               <dt>예약시간</dt>
               <dd id="confirmTime"></dd>
+              <button type="button" class="btn-confirm-edit" data-goto="4" aria-label="예약시간 수정">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H3v-2L11.5 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                <span class="btn-confirm-edit__text">수정</span>
+              </button>
             </div>
           </dl>
           <p class="confirm-notice">*예약하신 시간대에 순차적으로 연락드릴 예정입니다</p>
           <div class="step-actions">
             <button type="button" class="btn-step-prev" data-prev="4">이전</button>
             <button type="button" class="btn-step-submit" id="submitBtn">
-              <span class="btn-text">접수</span>
+              <span class="btn-text">접수하기</span>
               <span class="btn-spinner" hidden aria-hidden="true"></span>
             </button>
           </div>

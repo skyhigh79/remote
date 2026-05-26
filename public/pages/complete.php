@@ -80,7 +80,7 @@ $time_fmt  = sprintf(
         </div>
         <?php if ($symptom !== ''): ?>
         <div class="info-row">
-          <dt>증상</dt>
+          <dt>문의내용</dt>
           <dd><?= nl2br(htmlspecialchars($symptom)) ?></dd>
         </div>
         <?php endif; ?>
@@ -89,7 +89,7 @@ $time_fmt  = sprintf(
       <!-- 안내 문구 -->
       <p class="complete-note">
         예약 시간 변경, 취소는 담당 선생님 또는
-        고객센터(<strong><?= htmlspecialchars($cs_number) ?></strong>)로 문의 부탁드립니다.
+        고객센터(<a class="cs-tel" href="tel:<?= htmlspecialchars(preg_replace('/[^0-9]/', '', $cs_number)) ?>"><?= htmlspecialchars($cs_number) ?></a>)로 문의 부탁드립니다.
       </p>
 
       <!-- 버튼 영역 -->
@@ -97,6 +97,9 @@ $time_fmt  = sprintf(
         <button type="button" class="btn-close" onclick="handleClose()">
           확인
         </button>
+        <p class="close-fallback" id="closeFallback" hidden>
+          카카오톡 앱으로 직접 돌아가주세요.
+        </p>
       </div><!-- /.complete-actions -->
 
       </div><!-- /.complete-body -->
@@ -105,13 +108,12 @@ $time_fmt  = sprintf(
 
   <script>
     function handleClose() {
-      // 카카오톡 인앱 브라우저에서는 window.close() 동작이 제한될 수 있음
-      // 동작하지 않을 경우 안내 문구로 대체
-      try {
-        window.close();
-      } catch (e) {
-        // 닫기 실패 시 무시
-      }
+      window.close();
+      // window.close()가 실패하면 페이지가 그대로 남아 있으므로
+      // 300ms 후에도 살아 있으면 안내 문구를 표시
+      setTimeout(function () {
+        document.getElementById('closeFallback').hidden = false;
+      }, 300);
     }
   </script>
 </body>

@@ -2,3 +2,8 @@
 logs/*.log
 logs/php_error.log
 cache/*.json
+
+# 기획서 관련
+make_ppt.py
+_art_*.png
+*.pptx

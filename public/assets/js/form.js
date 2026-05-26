@@ -60,20 +60,78 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!form) return;
 
   // ── 스텝 이동 ────────────────────────────────────────────
-  showStep(1);
+  // 초기 진입 시 히스토리 항목을 교체(replaceState)해 step 1을 기록
+  history.replaceState({ step: 1 }, '');
+  showStep(1, false);
+
+  // Step 5 수정 버튼으로 진입했을 때 true — 완료 후 Step 5로 바로 복귀
+  let returnToConfirm = false;
+  // 날짜(Step 3) 수정 시: Step 4(시간)까지 다시 거쳐야 Step 5로 복귀 가능
+  // Step 3 → Step 4 진입 시점에 returnToConfirm을 활성화하기 위한 플래그
+  let dateEditPending = false;
+
+  function setReturnMode(on) {
+    returnToConfirm = on;
+    document.querySelectorAll('.btn-step-next').forEach(btn => {
+      btn.textContent = on ? '수정 완료' : '다음';
+    });
+    document.querySelectorAll('.btn-step-prev').forEach(btn => {
+      btn.hidden = on;
+    });
+  }
+
+  function resetEditFlags() {
+    if (returnToConfirm) setReturnMode(false);
+    dateEditPending = false;
+  }
+
+  // 안드로이드 뒤로가기 / 브라우저 뒤로가기 → 이전 스텝 복원
+  window.addEventListener('popstate', e => {
+    const step = e.state?.step;
+    if (typeof step === 'number') {
+      resetEditFlags();
+      showStep(step, false);
+    }
+  });
 
   form.addEventListener('click', e => {
     const nextBtn = e.target.closest('.btn-step-next');
     const prevBtn = e.target.closest('.btn-step-prev');
+    const editBtn = e.target.closest('.btn-confirm-edit');
 
     if (nextBtn) {
       const nextStep = parseInt(nextBtn.dataset.next, 10);
       if (validateStep(nextStep - 1)) {
-        if (nextStep === 5) populateConfirm();
-        showStep(nextStep);
+        if (returnToConfirm) {
+          // 수정 완료 — Step 5로 즉시 복귀
+          setReturnMode(false);
+          populateConfirm();
+          showStep(5);
+        } else if (dateEditPending && nextStep === 4) {
+          // 날짜 수정 후 Step 3 → Step 4 진입 시점: 이제 수정 모드 활성화
+          // 사용자가 시간을 다시 선택해야 "수정 완료" 가능
+          dateEditPending = false;
+          setReturnMode(true);
+          showStep(4);
+        } else {
+          if (nextStep === 5) populateConfirm();
+          showStep(nextStep);
+        }
       }
     } else if (prevBtn) {
-      showStep(parseInt(prevBtn.dataset.prev, 10));
+      resetEditFlags();
+      const prevStep = parseInt(prevBtn.dataset.prev, 10);
+      showStep(prevStep);
+    } else if (editBtn) {
+      const gotoStep = parseInt(editBtn.dataset.goto, 10);
+      if (gotoStep === 3) {
+        // 날짜 수정: Step 4(시간)도 다시 거쳐야 하므로 즉시 수정 모드 진입 금지
+        dateEditPending = true;
+        showStep(3);
+      } else {
+        setReturnMode(true);
+        showStep(gotoStep);
+      }
     }
   });
 
@@ -90,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (n === 2) {
       const symptomVal = symptomEl?.value.trim() ?? '';
       if (!symptomVal) {
-        setFieldError('fieldSymptom', 'symptomError', '증상을 입력해주세요.');
+        setFieldError('fieldSymptom', 'symptomError', '문의내용을 입력해주세요.');
         return false;
       }
       clearFieldError('fieldSymptom', 'symptomError');
@@ -117,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
-  function showStep(n) {
+  function showStep(n, push = true) {
     document.querySelectorAll('.step-panel').forEach((panel, i) => {
       const active = i + 1 === n;
       panel.hidden = !active;
@@ -128,6 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
       item.classList.toggle('active', s === n);
       item.classList.toggle('done',   s < n);
     });
+    if (push) {
+      history.pushState({ step: n }, '');
+    }
   }
 
   // ── Step 5 확인 내용 채우기 ─────────────────────────────

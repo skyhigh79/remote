@@ -504,7 +504,7 @@
 
 .confirm-row {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: var(--spacing-md);
   padding: var(--spacing-sm) var(--spacing-md);
   border-bottom: var(--border-width) solid var(--color-border);
@@ -519,6 +519,7 @@
   width: 56px;
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
+  padding-top: 5px;
 }
 
 .confirm-row dd {
@@ -528,8 +529,58 @@
   font-weight: var(--font-weight-medium);
   word-break: break-all;
   white-space: pre-line;
-  max-height: 80px;
+  max-height: 200px;
   overflow-y: auto;
+  padding-top: 4px;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.confirm-row dd::-webkit-scrollbar {
+  width: 4px;
+}
+.confirm-row dd::-webkit-scrollbar-track {
+  background: transparent;
+}
+.confirm-row dd::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.btn-confirm-edit {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 4px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  background: transparent;
+  transition: color var(--transition-base), background var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-confirm-edit:hover,
+.btn-confirm-edit:active {
+  color: var(--color-primary);
+  background: var(--color-bg);
+}
+
+.btn-confirm-edit svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.btn-confirm-edit__text {
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0;
 }
 
 .confirm-notice {
@@ -605,6 +656,20 @@
 
 .date-btn.selected .date-btn__today {
   background: var(--color-primary);
+  color: #fff;
+}
+
+.date-btn--closed {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: var(--color-bg);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.date-btn--closed .date-btn__today {
+  background: var(--color-text-secondary);
   color: #fff;
 }
 

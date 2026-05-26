@@ -14,7 +14,7 @@ const ERROR_MAP = [
     ],
     'server_error'   => [
         'title' => '일시적인 오류가 발생했습니다',
-        'desc'  => '잠시 후 다시 시도해 주세요.',
+        'desc'  => '잠시 후 원격접수를 다시 시도해주세요.',
     ],
 ];
 
@@ -30,6 +30,10 @@ $service_name  = $service_key ? SERVICE_MAP[$service_key] : '';
 $character_img = $service_key
     ? (CHARACTER_IMG_MAP[$service_key] ?? ASSET_CHARACTER_IMG)
     : ASSET_CHARACTER_IMG;
+
+// 링크 재발급이 필요한 오류 유형에서만 고객센터 번호 표시
+$show_cs   = $service_key && in_array($type, ['token_expired', 'invalid_access']);
+$cs_number = $show_cs ? (CS_NUMBER_MAP[$service_key] ?? '') : '';
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -68,10 +72,33 @@ $character_img = $service_key
         <div class="error-message">
           <p class="error-title"><?= htmlspecialchars($error['title']) ?></p>
           <p class="error-desc"><?= $error['desc'] ?></p>
+          <?php if ($cs_number): ?>
+          <p class="error-cs-note">
+            *원격 접수가 원활하지 않을 경우 밀크T 고객센터
+            <a href="tel:<?= preg_replace('/\D/', '', $cs_number) ?>"><?= htmlspecialchars($cs_number) ?></a>로
+            연락 부탁드립니다.
+          </p>
+          <?php endif; ?>
+        </div>
+
+        <div class="error-actions">
+          <button type="button" class="btn-error-close" onclick="handleClose()">확인</button>
+          <p class="close-fallback" id="closeFallback" hidden>
+            카카오톡 앱으로 직접 돌아가주세요.
+          </p>
         </div>
       </div>
 
     </div>
   </main>
+
+  <script>
+    function handleClose() {
+      window.close();
+      setTimeout(function () {
+        document.getElementById('closeFallback').hidden = false;
+      }, 300);
+    }
+  </script>
 </body>
 </html>

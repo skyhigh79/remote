@@ -127,7 +127,7 @@
 
 .info-row {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: var(--spacing-md);
   padding: var(--spacing-sm) var(--spacing-md);
   border-bottom: var(--border-width) solid var(--color-border);
@@ -171,6 +171,16 @@
   color: var(--color-text);
 }
 
+.cs-tel {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  text-decoration: none;
+}
+
+.cs-tel:hover {
+  text-decoration: underline;
+}
+
 /* ============================================================
    버튼 영역
    ============================================================ */
@@ -196,4 +206,14 @@
 
 .btn-close:hover {
   background: var(--color-primary-hover);
+}
+
+/* ============================================================
+   window.close() 실패 시 fallback 안내
+   ============================================================ */
+.close-fallback {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-base);
 }

@@ -189,6 +189,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (push) {
       history.pushState({ step: n }, '');
     }
+    // Step 5 진입 시: 문의내용이 길어 접수하기 버튼이 가려질 수 있으므로 버튼까지 스크롤
+    if (n === 5) {
+      requestAnimationFrame(() => {
+        document.getElementById('submitBtn')?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      });
+    }
   }
 
   // ── Step 5 확인 내용 채우기 ─────────────────────────────
